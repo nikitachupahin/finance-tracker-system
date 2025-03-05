@@ -1,15 +1,12 @@
 import { registerUser, authenticateUser } from "../services/authService.js";
+import { signupSchema, signinSchema } from "../schemas/userSchema.js";
+import { validateSchema } from "../libs/validation.js";
 
 export const signupUser = async (req, res) => {
   try {
+    validateSchema(signupSchema, req.body);
+
     const { name, email, password } = req.body;
-
-    if (!name || !email || !password) {
-      return res
-        .status(400)
-        .json({ status: "error", message: "All fields are required." });
-    }
-
     const user = await registerUser(name, email, password);
 
     res.status(201).json({
@@ -24,13 +21,8 @@ export const signupUser = async (req, res) => {
 
 export const signinUser = async (req, res) => {
   try {
+    validateSchema(signinSchema, req.body);
     const { email, password } = req.body;
-
-    if (!email || !password) {
-      return res
-        .status(400)
-        .json({ status: "error", message: "Email and password are required." });
-    }
 
     const { user, token } = await authenticateUser(email, password);
 
