@@ -1,5 +1,5 @@
 import express from "express";
-import authMiddleWare from "../middleware/authMiddleWare.js";
+import authMiddleware from "../middleware/authMiddleWare.js";
 
 import {
   changePassword,
@@ -9,8 +9,8 @@ import {
 
 const router = express.Router();
 
-router.get("/", authMiddleWare, getUser);
-router.put("/change-password", authMiddleWare, changePassword);
-router.put("/", authMiddleWare, updateUser);
+router.get("/", authMiddleware, getUser);
+router.put("/change-password", authMiddleware, changePassword);
+router.put("/", authMiddleware, updateUser);
 
 export default router;
