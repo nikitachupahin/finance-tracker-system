@@ -1,6 +1,5 @@
 import * as transactionService from "../services/transactionService.js";
-import validateTransaction from "../schemas/transactionSchema.js";
-import express from "express";
+import { validateTransaction } from "../libs/validation.js";
 
 export const createTransaction = async (req, res) => {
   try {
@@ -9,6 +8,7 @@ export const createTransaction = async (req, res) => {
       return res.status(400).json({ message: "User ID is required" });
     }
     const { amount, type, category, description } = req.body;
+
     const transaction = await transactionService.createTransaction(
       userId,
       amount,
@@ -16,6 +16,7 @@ export const createTransaction = async (req, res) => {
       category,
       description
     );
+
     res.status(201).json({ message: "Transaction created", transaction });
   } catch (error) {
     console.error(error);
@@ -30,11 +31,13 @@ export const getUserTransactions = async (req, res) => {
       return res.status(400).json({ message: "User ID is required" });
     }
     const { type, category } = req.query;
+
     const transactions = await transactionService.getUserTransactions(
       userId,
       type,
       category
     );
+
     res.status(200).json({ transactions });
   } catch (error) {
     console.error(error);
