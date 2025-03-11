@@ -2,8 +2,6 @@ import * as transactionService from "../services/transactionService.js";
 import validateTransaction from "../schemas/transactionSchema.js";
 import express from "express";
 
-const router = express.Router();
-
 export const createTransaction = async (req, res) => {
   try {
     const userId = req.body.user?.userId;
@@ -57,9 +55,3 @@ export const getUserSummary = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
-router.post("/transactions", validateTransaction, createTransaction);
-router.get("/transactions", getUserTransactions);
-router.get("/transactions/summary", getUserSummary);
-
-export default router;
