@@ -13,5 +13,6 @@ router.post(
 );
 router.get("/", authMiddleware, transactionController.getUserTransactions);
 router.get("/summary", authMiddleware, transactionController.getUserSummary);
+router.delete("/:transactionId", authMiddleware, transactionController.deleteTransaction);
 
 export default router;

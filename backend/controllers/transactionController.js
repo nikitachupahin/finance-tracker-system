@@ -1,5 +1,4 @@
 import * as transactionService from "../services/transactionService.js";
-import { validateTransaction } from "../libs/validation.js";
 
 export const createTransaction = async (req, res) => {
   try {
@@ -53,6 +52,32 @@ export const getUserSummary = async (req, res) => {
     }
     const summary = await transactionService.getUserSummary(userId);
     res.status(200).json({ summary });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const deleteTransaction = async (req, res) => {
+  try {
+    const userId = req.body.user?.userId;
+    const { transactionId } = req.params;
+
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
+    if (!transactionId) {
+      return res.status(400).json({ message: "Transaction ID is required" });
+    }
+
+    const deletedTransaction = await transactionService.deleteTransaction(userId, transactionId);
+
+    if (!deletedTransaction) {
+      return res.status(404).json({ message: "Transaction not found or not authorized to delete" });
+    }
+
+    res.status(200).json({ message: "Transaction deleted successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });

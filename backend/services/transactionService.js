@@ -38,3 +38,12 @@ export const getUserSummary = async (userId) => {
   });
   return summary.rows[0];
 };
+
+export const deleteTransaction = async (userId, transactionId) => {
+  const result = await pool.query({
+    text: `DELETE FROM transactions WHERE id = $1 AND user_id = $2 RETURNING *`,
+    values: [transactionId, userId],
+  });
+
+  return result.rowCount > 0;
+};
