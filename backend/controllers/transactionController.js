@@ -2,7 +2,7 @@ import * as transactionService from "../services/transactionService.js";
 
 export const createTransaction = async (req, res) => {
   try {
-    const userId = req.body.user?.userId;
+    const userId = req.user?.userId;
     if (!userId) {
       return res.status(400).json({ message: "User ID is required" });
     }
@@ -25,7 +25,7 @@ export const createTransaction = async (req, res) => {
 
 export const getUserTransactions = async (req, res) => {
   try {
-    const userId = req.body.user?.userId;
+    const userId = req.user?.userId;
     if (!userId) {
       return res.status(400).json({ message: "User ID is required" });
     }
@@ -46,7 +46,7 @@ export const getUserTransactions = async (req, res) => {
 
 export const getUserSummary = async (req, res) => {
   try {
-    const userId = req.body.user?.userId;
+    const userId = req.user?.userId;
     if (!userId) {
       return res.status(400).json({ message: "User ID is required" });
     }
@@ -60,7 +60,7 @@ export const getUserSummary = async (req, res) => {
 
 export const deleteTransaction = async (req, res) => {
   try {
-    const userId = req.body.user?.userId;
+    const userId = req.user?.userId;
     const { transactionId } = req.params;
 
     if (!userId) {
