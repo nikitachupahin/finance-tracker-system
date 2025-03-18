@@ -16,3 +16,14 @@
 //     transaction_date TIMESTAMP NOT NULL DEFAULT NOW(),
 //     created_at TIMESTAMP DEFAULT NOW()
 // );
+
+// CREATE TABLE goals (
+//     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+//     user_id UUID NOT NULL,
+//     goal_name VARCHAR(255) NOT NULL,
+//     target_amount DECIMAL(10,2) NOT NULL,
+//     current_amount DECIMAL(10,2) DEFAULT 0,
+//     deadline TIMESTAMP NOT NULL,
+//     status VARCHAR(20) CHECK (status IN ('in_progress', 'completed', 'failed')) DEFAULT 'in_progress',
+//     created_at TIMESTAMP DEFAULT NOW()
+// );
