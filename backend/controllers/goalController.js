@@ -12,7 +12,7 @@ export const createGoal = async (req, res) => {
     }
 
     const goal = await goalService.createGoal(userId, goal_name, target_amount, current_amount, deadline);
-    res.status(201).json({ message: "Goal created", goal });
+    res.status(200).json({ message: "Goal created", goal });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });

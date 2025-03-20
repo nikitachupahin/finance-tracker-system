@@ -1,4 +1,5 @@
 import * as transactionService from "../services/transactionService.js";
+import { publishTransaction } from '../libs/rabbitmqPublisher.js';
 
 export const createTransaction = async (req, res) => {
   try {
@@ -15,6 +16,15 @@ export const createTransaction = async (req, res) => {
       category,
       description
     );
+
+    publishTransaction({
+      userId,
+      amount,
+      type,
+      category,
+      description,
+      date: new Date().toISOString(),
+    });
 
     res.status(201).json({ message: "Transaction created", transaction });
   } catch (error) {

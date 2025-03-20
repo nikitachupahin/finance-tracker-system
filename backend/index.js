@@ -1,8 +1,12 @@
 import cors from "cors";
 import express from "express";
 import dotenv from "dotenv";
-
 import routes from "./routes/index.js";
+import { connectRabbitMQ } from './libs/rabbitmqPublisher.js';
+import { connectRabbitMQConsumer } from './libs/rabbitmqConsumer.js';
+
+connectRabbitMQ();
+connectRabbitMQConsumer();
 
 dotenv.config();
 
