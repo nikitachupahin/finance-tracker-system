@@ -29,18 +29,25 @@ export const connectRabbitMQConsumer = async () => {
 };
 
 const updateGoalsWithTransaction = async (userId, amount, type) => {
-  if (type !== 'income') return; 
-  
   const goalsResult = await pool.query({
-    text: `SELECT * FROM goals WHERE user_id = $1 AND status != 'completed'`,
+    text: `SELECT * FROM goals WHERE user_id = $1 AND status NOT IN ('completed', 'failed')`,
     values: [userId],
   });
 
   for (let goal of goalsResult.rows) {
-    const newAmount = parseFloat(goal.current_amount) + parseFloat(amount);
+    let newAmount = parseFloat(goal.current_amount);
     let newStatus = goal.status;
-    if (newAmount >= parseFloat(goal.target_amount)) {
-      newStatus = 'completed';
+
+    if (type === 'income') {
+      newAmount += parseFloat(amount);
+      if (newAmount >= parseFloat(goal.target_amount)) {
+        newStatus = 'completed';
+      }
+    } else if (type === 'expense') {
+      newAmount -= parseFloat(amount);
+      if (newAmount < 0) {
+        newStatus = 'failed';
+      }
     }
 
     await pool.query({
@@ -51,4 +58,5 @@ const updateGoalsWithTransaction = async (userId, amount, type) => {
     console.log(`Goal ${goal.goal_name} updated: current_amount = ${newAmount}, status = ${newStatus}`);
   }
 };
+
 
