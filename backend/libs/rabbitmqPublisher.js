@@ -4,7 +4,7 @@ let channel;
 
 export const connectRabbitMQ = async () => {
   try {
-    const connection = await amqp.connect('amqp://localhost'); // или другой адрес
+    const connection = await amqp.connect("amqp://localhost"); 
     channel = await connection.createChannel();
     await channel.assertQueue('transactionQueue', { durable: true });
     console.log('Connected to RabbitMQ (Publisher)');

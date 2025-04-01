@@ -3,17 +3,20 @@ import express from "express";
 import dotenv from "dotenv";
 import routes from "./routes/index.js";
 import { connectRabbitMQ } from './libs/rabbitmqPublisher.js';
-import { connectRabbitMQConsumer } from './libs/rabbitmqConsumer.js';
-
-connectRabbitMQ();
-connectRabbitMQConsumer();
+import { connectRabbitMQConsumer } from "./libs/rabbitmqConsumer.js";
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-app.use(cors("*"));
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
@@ -29,3 +32,6 @@ app.use("*", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on ${PORT}`);
 });
+
+connectRabbitMQ();
+connectRabbitMQConsumer();
