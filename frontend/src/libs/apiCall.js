@@ -1,7 +1,6 @@
-// src/libs/apiCall.js
 import axios from "axios";
 
-const API_URL = "http://localhost:8800/api-v1"; // Базовый адрес API
+const API_URL = "http://localhost:5001/api";
 
 const api = axios.create({
   baseURL: API_URL,

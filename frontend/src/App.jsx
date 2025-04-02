@@ -5,7 +5,7 @@ import SignUp from "./pages/auth/sign-up";
 import Dashboard from "./pages/dashboard";
 import Transactions from "./pages/transactions";
 import useStore from "./store";
-import { setAuthToken } from "../libs/apiCall";
+import { setAuthToken } from "./libs/apiCall";
 import { Toaster } from "sonner";
 const RootLayout = () => {
   const { user } = useStore((state) => state);

@@ -2,17 +2,18 @@ import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router-dom";
-import { Card, CardHeader, CardTitle, CardContent } from "@/ui/card";
-import Input from "@/ui/input";
-import { Button } from "@/ui/buttons";
+import { useNavigate, Link } from "react-router-dom";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/card";
+import Input from "@/components/input";
+import { Button } from "@/components/buttons";
 import useStore from "@/store";
-import { SocialAuth } from "@/ui/social-auth";
+import api from "../../libs/apiCall";
+import {toast} from "sonner"
 
 const signupSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
-  password: z.string().min(3, "Password must be at least 3 characters"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
 const SignUp = () => {
@@ -32,12 +33,24 @@ const SignUp = () => {
     if (user) navigate("/");
   }, [user]);
 
+  
   const onSubmit = async (data) => {
-    const res = await fetch("/api/auth/sign-up", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: { "Content-Type": "application/json" },
-    });
+    try {
+      setLoading(true);
+
+      const { data: res }  = await api.post("/auth/sign-up", data);
+      if (res?.user) {
+        toast.success("Account created successfully. You can now login."); 
+        setTimeout(() => {
+          navigate("/sign-in");
+        }, 1500);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error?.response?.data?.message || error.message);
+    } finally {
+      setLoading (false);
+    }
   };
 
   return (
@@ -50,46 +63,40 @@ const SignUp = () => {
         </CardHeader>
 
         <CardContent>
-          <div className="mb-6">
-            <SocialAuth isLoading={loading} setLoading={setLoading} />
-          </div>
-
-          {/* Divider */}
-          <div className="flex items-center justify-center mb-6">
-            <span className="border-t w-1/4 border-gray-300"></span>
-            <span className="px-2 text-sm text-gray-500">OR</span>
-            <span className="border-t w-1/4 border-gray-300"></span>
-          </div>
-
-          {/* Form */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
               <Input
                 id="name"
+                label="Name"
                 placeholder="John Smith"
                 {...register("name")}
                 error={errors.name?.message}
                 disabled={loading}
+                className="border dark:border-gray-700"
               />
             </div>
             <div>
               <Input
                 id="email"
+                label="Email"
                 placeholder="you@example.com"
                 type="email"
                 {...register("email")}
                 error={errors.email?.message}
                 disabled={loading}
+                className="border dark:border-gray-700"
               />
             </div>
             <div>
               <Input
                 id="password"
+                label="Password"
                 placeholder="Your password"
                 type="password"
                 {...register("password")}
                 error={errors.password?.message}
                 disabled={loading}
+                className="border dark:border-gray-700"
               />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
@@ -97,9 +104,19 @@ const SignUp = () => {
             </Button>
           </form>
         </CardContent>
+        <CardFooter className="justify-center gap-2">
+          <p className="text-sm text-gray-600">Already have an account?</p>
+          <Link
+            to="/sign-in"
+            className="text-sm font-semibold text-violet-600 hover:underline"
+          >
+            Sign in
+          </Link>
+        </CardFooter>
       </Card>
     </div>
   );
 };
 
 export default SignUp;
+
