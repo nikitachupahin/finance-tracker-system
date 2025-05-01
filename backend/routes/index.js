@@ -10,5 +10,6 @@ router.use("/auth", authRoutes);
 router.use("/user", userRoutes);
 router.use("/transactions", transactionRoutes);
 router.use("/goals", goalRoutes);
+router.use("/settings", userRoutes);
 
 export default router; 

@@ -19,7 +19,8 @@ export const getUserGoals = async (userId) => {
 };
 
 export const updateGoal = async (goalId, userId, updates) => {
-  const { goal_name, target_amount, current_amount, deadline, status } = updates;
+  const { goal_name, target_amount, current_amount, deadline, status } =
+    updates;
 
   const result = await pool.query({
     text: `UPDATE goals SET 
@@ -29,7 +30,15 @@ export const updateGoal = async (goalId, userId, updates) => {
               deadline = COALESCE($4, deadline),
               status = COALESCE($5, status)
            WHERE id = $6 AND user_id = $7 RETURNING *`,
-    values: [goal_name, target_amount, current_amount, deadline, status, goalId, userId],
+    values: [
+      goal_name,
+      target_amount,
+      current_amount,
+      deadline,
+      status,
+      goalId,
+      userId,
+    ],
   });
 
   return result.rows[0];

@@ -11,18 +11,16 @@ export const getUserById = async (userId) => {
     values: [userId],
   });
 
-  return userExist.rows[0] || null;
+  return userExist.rows[0];
 };
 
-export const changeUserPassword = async (userId, currentPassword, newPassword, confirmPassword) => {
-  if (newPassword !== confirmPassword) {
-    throw new Error("New Passwords do not match");
-  }
-
+export const changeUserPassword = async (
+  userId,
+  currentPassword,
+  newPassword,
+  confirmPassword
+) => {
   const user = await getUserById(userId);
-  if (!user) {
-    throw new Error("User not found");
-  }
 
   const isMatch = await comparePassword(currentPassword, user.password);
   if (!isMatch) {
@@ -41,9 +39,6 @@ export const changeUserPassword = async (userId, currentPassword, newPassword, c
 
 export const updateUserInfo = async (userId, name, email) => {
   const user = await getUserById(userId);
-  if (!user) {
-    throw new Error("User not found");
-  }
 
   const updatedUser = await pool.query({
     text: "UPDATE users SET name = $1, email = $2, createdat = CURRENT_TIMESTAMP WHERE id = $3 RETURNING *",
