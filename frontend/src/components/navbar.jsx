@@ -11,6 +11,7 @@ import TransitionWrapper from "./wrappers/transition-wrapper";
 const links = [
   { label: "Dashboard", link: "/overview" },
   { label: "Transactions", link: "/transactions" },
+  { label: "Goals", link: "/goals" },
   { label: "Settings", link: "/settings" },
 ];
 

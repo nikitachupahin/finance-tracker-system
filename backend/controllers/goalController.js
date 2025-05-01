@@ -21,16 +21,19 @@ export const createGoal = async (req, res) => {
 
 export const getUserGoals = async (req, res) => {
   try {
-    const userId = req.params.userId;
-    if (!userId) return res.status(400).json({ message: "User ID is required" });
+    const userId = req.user?.userId;
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is missing in token" });
+    }
 
     const goals = await goalService.getUserGoals(userId);
-    res.status(200).json({ goals });
+    return res.status(200).json({ goals });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 export const updateGoal = async (req, res) => {
   try {

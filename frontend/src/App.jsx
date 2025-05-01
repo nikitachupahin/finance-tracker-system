@@ -10,6 +10,7 @@ import { Toaster } from "sonner";
 import { useEffect } from "react";
 import Navbar from "./components/navbar";
 import Settings from "./pages/settings";
+import Goals from "./pages/goals";
 
 const RootLayout = () => {
   const { user } = useStore((state) => state);
@@ -41,6 +42,7 @@ function App() {
             <Route path="/overview" element={<Dashboard />} />
             <Route path="/transactions" element={<Transactions />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/goals" element={<Goals />} />
           </Route>
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />

@@ -5,17 +5,17 @@ import Loading from "../components/loading";
 import Info from "../components/info";
 import Stats from "../components/stats";
 import Chart from "../components/chart";
-import RecentTransactions from "../components/recent-transactions";
+import DoughnutChart from "../components/piechart"; 
 
 const Dashboard = () => {
-  const [data, setData] = useState([]);
+  const [summary, setSummary] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchDashboardStats = async () => {
     const URL = "/transactions/summary";
     try {
       const { data } = await api.get(URL);
-      setData(data);
+      setSummary(data.summary);
     } catch (error) {
       console.error(error);
       toast.error(
@@ -37,7 +37,7 @@ const Dashboard = () => {
     fetchDashboardStats();
   }, []);
 
-  if (isLoading) {
+  if (isLoading || !summary) {
     return (
       <div className="flex items-center justify-center w-full h-[80vh]">
         <Loading />
@@ -45,31 +45,31 @@ const Dashboard = () => {
     );
   }
 
+  const totalIncome = parseFloat(summary.total_income);
+  const totalExpense = parseFloat(summary.total_expense);
+  const balance = totalIncome - totalExpense;
+
   return (
-    <div className="px-0 md:px-5 2xl:px-20">
+    <div className="px-0 md:px-5 2xl:px-20 p-20">
       <Info title="Dashboard" subTitle="Monitor your financial activities" />
       <Stats
         dt={{
-          balance: data?.availableBalance,
-          income: data?.totalIncome,
-          expense: data?.totalExpense,
+          balance,
+          income: totalIncome,
+          expense: totalExpense,
         }}
       />
       <div className="flex flex-col-reverse items-center gap-10 w-full md:flex-row">
-        <Chart data={data?.chartData} />
-
-        {data?.totalIncome > 0 && (
+        <Chart data={{ income: totalIncome, expense: totalExpense }} />
+        {totalIncome > 0 && (
           <DoughnutChart
             dt={{
-              balance: data?.availableBalance,
-              income: data?.totalIncome,
-              expense: data?.totalExpense,
+              balance,
+              income: totalIncome,
+              expense: totalExpense,
             }}
           />
         )}
-      </div>
-      <div className="flex flex-col-reverse gap-0 md:flex-row md:gap-10 2xl:gap-20">
-        <RecentTransactions data={data?.lastTransactions || []} />
       </div>
     </div>
   );
