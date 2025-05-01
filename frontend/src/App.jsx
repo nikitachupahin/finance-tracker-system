@@ -7,15 +7,23 @@ import Transactions from "./pages/transactions";
 import useStore from "./store";
 import { setAuthToken } from "./libs/apiCall";
 import { Toaster } from "sonner";
+import { useEffect } from "react";
+import Navbar from "./components/navbar";
+import Settings from "./pages/settings";
+
 const RootLayout = () => {
   const { user } = useStore((state) => state);
-  setAuthToken(user?.token || "");
+
+  useEffect(() => {
+    setAuthToken(user?.token || "");
+  }, [user]);
 
   return !user ? (
     <Navigate to="/sign-in" replace={true} />
   ) : (
     <>
-      <div className="min-h-[cal(h-screen - 100px)]">
+      <Navbar />
+      <div className="min-h-[calc(100vh-100px)]">
         <Outlet />
       </div>
     </>
@@ -32,6 +40,7 @@ function App() {
             <Route path="/" element={<Navigate to="/overview" />} />
             <Route path="/overview" element={<Dashboard />} />
             <Route path="/transactions" element={<Transactions />} />
+            <Route path="/settings" element={<Settings />} />
           </Route>
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
